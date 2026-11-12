@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пополнение кошелька Steam | КВАНТУМ ПЭЙ</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif}
+body{background:#0b0d13;color:#f8fafc;line-height:1.5}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid #1e2230;padding:16px 0}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;font-size:20px;display:flex;align-items:center;gap:8px}
+.badge{background:#7c3aed;padding:3px 8px;border-radius:6px;font-size:13px}
+.links{display:flex;gap:16px;font-size:13px;color:#94a3b8}
+h1{font-size:26px;margin:24px 0 6px}
+.sub{color:#94a3b8;font-size:14px;margin-bottom:22px}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}}
+.card{background:#141722;border:1px solid #1e2230;border-radius:16px;padding:20px}
+.lbl{font-size:12px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between}
+.pills{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.pill{background:#1e2230;border:1px solid #2e3446;color:#fff;padding:8px 14px;border-radius:10px;font-size:14px;cursor:pointer}
+.pill.active{background:#fff;color:#000;font-weight:700}
+.inp{width:100%;background:#1e2230;border:1px solid #2e3446;color:#fff;padding:13px;border-radius:10px;font-size:15px;margin-bottom:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.box{background:#1e2230;border:1px solid #2e3446;padding:10px;border-radius:10px}
+.box span{font-size:12px;color:#94a3b8;display:block}
+.box input{width:100%;background:transparent;border:none;color:#fff;font-size:18px;font-weight:800;outline:none}
+.qbtns{display:flex;gap:8px;flex-wrap:wrap}
+.qbtn{background:#1e2230;border:1px solid #2e3446;color:#94a3b8;padding:6px 12px;border-radius:8px;font-size:13px;cursor:pointer}
+.srow{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px;color:#94a3b8}
+.srow b{color:#fff}
+.paybtn{width:100%;background:#facc15;color:#000;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px}
+.sec{margin-top:40px}
+.stitle{font-size:20px;font-weight:800;margin-bottom:14px}
+.cards4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.tcard{background:#141722;border:1px solid #1e2230;border-radius:14px;padding:16px;cursor:pointer}
+.tprice{color:#facc15;font-weight:800;font-size:17px;margin-top:10px}
+.faq{background:#141722;border:1px solid #1e2230;border-radius:12px;padding:14px 18px;margin-bottom:8px;cursor:pointer}
+.faqa{display:none;color:#94a3b8;font-size:13px;margin-top:8px}
+.faq.open .faqa{display:block}
+footer{margin-top:50px;border-top:1px solid #1e2230;background:#080a0f;padding:30px 0;font-size:13px;color:#94a3b8}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+footer h4{color:#fff;margin-bottom:8px}
+footer a{color:#60a5fa;display:block;margin-bottom:4px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;padding:16px;z-index:99}
+.mbox{background:#141722;border:1px solid #2e3446;border-radius:16px;max-width:400px;width:100%;padding:20px;text-align:center}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a href="/" class="logo"><span class="badge">QP</span>КВАНТУМ ПЭЙ</a><div class="links"><a href="#tariffs">Тарифы</a><a href="#info">Условия</a><a href="#faq">FAQ</a><a href="https://t.me">Поддержка</a></div></div></header>
+<div class="wrap">
+<h1>Пополнение кошелька Steam</h1>
+<p class="sub">Моментальное зачисление на баланс Steam по логину в России и СНГ</p>
+<div class="grid" id="top">
+<div class="card">
+<div class="lbl">1. Регион аккаунта</div>
+<div class="pills"><button class="pill active" data-r="Россия">🇷🇺 Россия</button><button class="pill" data-r="Казахстан">🇰🇿 Казахстан</button><button class="pill" data-r="Украина">🇺🇦 Украина</button></div>
+<div class="lbl"><span>2. Логин Steam</span><span style="color:#60a5fa;cursor:pointer" onclick="document.getElementById('hmod').style.display='flex'">Где взять логин?</span></div>
+<input id="login" class="inp" placeholder="Введите ваш ЛОГИН (не никнейм)">
+<div class="lbl">3. Сумма пополнения</div>
+<div class="row2">
+<div class="box"><span id="lget">Зачислим (₽)</span><input type="number" id="aget" value="500"></div>
+<div class="box"><span>К оплате (₽)</span><input type="number" id="apay" readonly style="color:#facc15"></div>
+</div>
+<div class="qbtns"><button class="qbtn" onclick="setS(200)">200 ₽</button><button class="qbtn" onclick="setS(500)">500 ₽</button><button class="qbtn" onclick="setS(1000)">1000 ₽</button><button class="qbtn" onclick="setS(2000)">2000 ₽</button></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #1e2230"><b>Итого к оформлению</b><b id="sbig" style="font-size:22px">590 ₽</b></div>
+<div class="srow"><span>Регион</span><b id="sreg">Россия</b></div>
+<div class="srow"><span>Аккаунт</span><b id="slog" style="color:#f87171">Введите логин</b></div>
+<div class="srow"><span>Курс</span><b id="srate">100 ₽ = 118 ₽</b></div>
+<button id="pbtn" class="paybtn">Перейти к оплате</button>
+<p style="font-size:11px;color:#94a3b8;margin-top:10px">Оплачивая заказ, вы принимаете <a href="/oferta.html" style="color:#60a5fa">Публичную оферту</a> и <a href="/privacy.html" style="color:#60a5fa">Политику конфиденциальности</a>.</p>
+</div>
+</div>
