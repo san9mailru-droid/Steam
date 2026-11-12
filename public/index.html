@@ -1,156 +1,313 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ИГРОМИР — Пополнение кошелька Steam</title>
-<link rel="stylesheet" href="style.css">
-<style>
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:1000;padding:15px}
-.modal-content{background:#151b26;border:2px solid #a855f7;padding:25px;border-radius:16px;max-width:450px;width:100%;text-align:center;max-height:85vh;overflow-y:auto}
-.order-badge{background:#0f172a;padding:12px;border-radius:8px;font-weight:bold;color:#38bdf8;font-size:20px;margin:15px 0;border:1px dashed #2e3c54}
-.instructions{text-align:left;font-size:13px;color:#94a3b8;line-height:1.6;background:#0f172a;padding:15px;border-radius:10px;margin:15px 0}
-.close-btn{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;border:none;padding:14px;border-radius:10px;margin-top:10px;cursor:pointer;width:100%;font-weight:700}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:30px}
-.info-box{background:rgba(30,41,59,0.4);border:1px solid rgba(255,255,255,0.06);padding:18px;border-radius:12px;text-align:left}
-.info-box h3{font-size:15px;color:#fff;margin-bottom:8px}
-.info-box p{font-size:13px;color:#94a3b8;line-height:1.5}
-.footer{margin-top:35px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);text-align:center;font-size:13px;color:#94a3b8}
-.footer a{color:#38bdf8;text-decoration:none;margin:0 10px;cursor:pointer}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пополнение кошелька Steam | ИГРОМИР</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+        .modal-content { background: #151b26; border: 2px solid #a855f7; padding: 25px; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); }
+        .order-badge { background: #0f172a; padding: 12px; border-radius: 8px; font-weight: bold; color: #38bdf8; font-size: 20px; margin: 15px 0; border: 1px dashed #2e3c54; letter-spacing: 1px; }
+        .instructions { text-align: left; font-size: 14px; color: #94a3b8; line-height: 1.6; background: #0f172a; padding: 15px; border-radius: 10px; margin: 15px 0; }
+        .instructions strong { color: white; }
+        .close-btn { background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); color: white; border: none; padding: 14px; border-radius: 10px; margin-top: 10px; cursor: pointer; width: 100%; font-weight: 700; font-size: 15px; }
+        .close-btn:active { transform: scale(0.98); }
+        .converted-price { font-size: 12px; color: #10b981; display: block; margin-top: 2px; }
+        .extra-section { margin-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 30px; }
+        .section-title { font-size: 22px; font-weight: 800; margin-bottom: 20px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .faq-item { background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+        .faq-question { padding: 15px 20px; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.2); }
+        .faq-question::after { content: "➔"; font-size: 12px; color: #a855f7; transform: rotate(90deg); transition: transform 0.2s; }
+        .faq-item.active .faq-question::after { transform: rotate(-90deg); }
+        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out, padding 0.2s ease-out; color: #94a3b8; font-size: 14px; line-height: 1.5; }
+        .faq-item.active .faq-answer { padding: 15px 20px; max-height: 200px; border-top: 1px solid rgba(255, 255, 255, 0.02); }
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .review-card { background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255, 255, 255, 0.03); padding: 18px; border-radius: 12px; }
+        .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .review-user { font-weight: 600; font-size: 14px; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .review-avatar { width: 24px; height: 24px; background: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
+        .review-stars { color: #eab308; font-size: 12px; }
+        .review-text { font-size: 13px; color: #94a3b8; line-height: 1.4; }
+        .support-banner { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); border: 1px solid rgba(168, 85, 247, 0.2); padding: 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 30px; }
+        .support-text h4 { font-size: 15px; margin-bottom: 4px; color: #fff; }
+        .support-text p { font-size: 13px; color: #94a3b8; }
+        .btn-support { background: #24a1de; color: white; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(36, 161, 222, 0.3); }
+        .btn-support:hover { background: #1e87be; transform: translateY(-1px); }
+        .input-container-box { position: relative; display: flex; align-items: center; }
+        .input-suffix { position: absolute; right: 15px; color: #64748b; font-weight: bold; font-size: 16px; }
+
+        .tariffs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .tariff-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(168, 85, 247, 0.25); padding: 18px; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+        .tariff-card:hover { border-color: #a855f7; transform: translateY(-2px); background: rgba(30, 41, 59, 0.7); }
+        .tariff-title { font-weight: 700; font-size: 16px; color: #fff; margin-bottom: 6px; }
+        .tariff-desc { font-size: 13px; color: #94a3b8; margin-bottom: 12px; line-height: 1.4; }
+        .tariff-price { font-size: 18px; font-weight: 800; color: #38bdf8; }
+        .site-footer { margin-top: 40px; padding: 25px 0 35px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 13px; color: #94a3b8; line-height: 1.7; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .footer-title { color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+        .footer-links a { color: #38bdf8; text-decoration: none; display: block; margin-bottom: 5px; }
+    </style>
+
 </head>
 <body>
-<div class="container">
-<header>
-<h1 class="logo">ИГРОМИР</h1>
-<p class="subtitle">Цифровой сервис пополнения баланса кошелька Steam</p>
-</header>
+    <div class="container">
+        <header>
+            <h1 class="logo">ИГРОМИР</h1>
+            <p class="subtitle">Быстрое и безопасное пополнение Steam в России и СНГ</p>
+        </header>
+        <main class="main-content">
+            <section class="form-section">
+                <div class="form-group">
+                    <label>Логин Steam</label>
+                    <input type="text" id="steam-login" placeholder="Введите именно ЛОГИН, не никнейм" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Регион аккаунта</label>
+                    <div class="region-buttons">
+                        <button class="btn-region active" data-region="Россия">🇷🇺 Россия</button>
+                        <button class="btn-region" data-region="Казахстан">🇰🇿 Казахстан</button>
+                        <button class="btn-region" data-region="Украина">🇺🇦 Украина</button>
+                    </div>
+                </div>
+                <div class="form-columns" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label id="label-get">Получите на Steam</label>
+                        <div class="input-container-box">
+                            <input type="number" id="amount-get" value="500">
+                            <span id="suffix-get" class="input-suffix">₽</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Сумма к оплате</label>
+                        <div class="input-container-box">
+                            <input type="number" id="amount-pay" readonly style="background: rgba(15,23,42,0.3); color: #94a3b8;">
+                            <span class="input-suffix">₽</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="summary-section">
+                <h2>Итого к оформлению</h2>
+                <div class="summary-row">
+                    <span>Регион зачисления</span>
+                    <span id="summary-region">Россия</span>
+                </div>
+                <div class="summary-row">
+                    <span>Аккаунт</span>
+                    <span id="summary-login" class="warning">Введите логин</span>
+                </div>
+                <div class="summary-row">
+                    <span>Внутренний курс</span>
+                    <span id="summary-rate">1 ₽ = 1.00 ₽</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Итого к оплате</span>
+                    <span id="summary-total">0 ₽</span>
+                </div>
+                <button id="pay-btn" class="btn-pay">Перейти к оплате</button>
+            </section>
+        </main>
+        <section class="extra-section">
+            <h3 class="section-title">Фиксированные пакеты пополнения (РФ)</h3>
+            <div class="tariffs-grid">
+                <div class="tariff-card" onclick="document.getElementById('amount-get').value=300; calculate(); window.scrollTo({top:0,behavior:'smooth'});">
+                    <div class="tariff-title">Пополнение Steam — 300 ₽</div>
+                    <p class="tariff-desc">Цифровая услуга пополнения баланса Steam по логину. Зачисление 300 ₽.</p>
+                    <div class="tariff-price">Цена: 354 ₽</div>
+                </div>
+                <div class="tariff-card" onclick="document.getElementById('amount-get').value=500; calculate(); window.scrollTo({top:0,behavior:'smooth'});">
+                    <div class="tariff-title">Пополнение Steam — 500 ₽</div>
+                    <p class="tariff-desc">Цифровая услуга пополнения баланса Steam по логину. Зачисление 500 ₽.</p>
+                    <div class="tariff-price">Цена: 590 ₽</div>
+                </div>
+                <div class="tariff-card" onclick="document.getElementById('amount-get').value=1000; calculate(); window.scrollTo({top:0,behavior:'smooth'});">
+                    <div class="tariff-title">Пополнение Steam — 1 000 ₽</div>
+                    <p class="tariff-desc">Цифровая услуга пополнения баланса Steam по логину. Зачисление 1 000 ₽.</p>
+                    <div class="tariff-price">Цена: 1 180 ₽</div>
+                </div>
+                <div class="tariff-card" onclick="document.getElementById('amount-get').value=2000; calculate(); window.scrollTo({top:0,behavior:'smooth'});">
+                    <div class="tariff-title">Пополнение Steam — 2 000 ₽</div>
+                    <p class="tariff-desc">Цифровая услуга пополнения баланса Steam по логину. Зачисление 2 000 ₽.</p>
+                    <div class="tariff-price">Цена: 2 360 ₽</div>
+                </div>
+            </div>
+        </section>
+        <section class="extra-section">
+            <h3 class="section-title">Условия получения заказа и возврата</h3>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <h4 style="color:#fff;margin-bottom:6px;">1. Способ получения</h4>
+                    <p class="review-text">Услуга оказывается онлайн. После оплаты средства автоматически зачисляются на указанный логин Steam без передачи пароля.</p>
+                </div>
+                <div class="review-card">
+                    <h4 style="color:#fff;margin-bottom:6px;">2. Срок зачисления</h4>
+                    <p class="review-text">Зачисление средств на кошелек Steam происходит в течение 1–15 минут после подтверждения платежа через ЮKassa.</p>
+                </div>
+                <div class="review-card">
+                    <h4 style="color:#fff;margin-bottom:6px;">3. Условия возврата</h4>
+                    <p class="review-text">При невозможности пополнения (ошибка в логине или неподдерживаемый регион) оформляется полный возврат средств в течение 1–3 рабочих дней.</p>
+                </div>
+            </div>
+        </section>
 
-<main class="main-content">
-<section class="form-section">
-<div class="form-group">
-<label>Логин аккаунта Steam (не никнейм)</label>
-<input type="text" id="login" placeholder="Введите ваш логин Steam">
-</div>
-<div class="form-group">
-<label>Регион аккаунта</label>
-<div class="region-buttons">
-<button class="btn-region active" data-reg="Россия">🇷🇺 Россия</button>
-<button class="btn-region" data-reg="Казахстан">🇰🇿 Казахстан</button>
-<button class="btn-region" data-reg="Украина">🇺🇦 Украина</button>
-</div>
-</div>
-<div class="row-2">
-<div class="form-group">
-<label id="lbl-get">Сумма зачисления (₽)</label>
-<input type="number" id="amt-get" value="500" min="10">
-</div>
-<div class="form-group">
-<label>К оплате (₽)</label>
-<input type="number" id="amt-pay" readonly style="opacity:0.7">
-</div>
-</div>
-</section>
-
-<section class="summary-section">
-<h2>Детали заказа</h2>
-<div class="summary-row"><span>Услуга</span><span>Пополнение Steam</span></div>
-<div class="summary-row"><span>Регион</span><span id="sum-reg">Россия</span></div>
-<div class="summary-row"><span>Логин</span><span id="sum-log" class="warning">Не указан</span></div>
-<div class="summary-row total"><span>Итого к оплате</span><span id="sum-tot">0 ₽</span></div>
-<button id="pay-btn" class="btn-pay">Перейти к оплате</button>
-<p style="font-size:11px;color:#64748b;margin-top:10px;text-align:center">Нажимая кнопку, вы принимаете условия <a onclick="openOffer()" style="color:#a855f7;text-decoration:underline;cursor:pointer">Публичной оферты</a></p>
-</section>
-</main>
-
-<section class="info-grid">
-<div class="info-box">
-<h3>📦 Описание услуги</h3>
-<p>Пополнение внутреннего кошелька аккаунтов Steam (РФ, Казахстан, Украина). Зачисление происходит по логину в течение 5–15 минут после подтверждения оплаты.</p>
-</div>
-<div class="info-box">
-<h3>🛡 Гарантии и возврат</h3>
-<p>Услуга считается оказанной в момент зачисления средств на баланс указанного логина. В случае технической ошибки гарантируется полный возврат средств.</p>
-</div>
-<div class="info-box">
-<h3>📞 Контакты и поддержка</h3>
-<p>Служба поддержки работает ежедневно с 10:00 до 23:00 (МСК).<br>Telegram: <a href="https://t.me" target="_blank" style="color:#38bdf8">@quenti2508</a></p>
-</div>
-</section>
-
-<footer class="footer">
-<p style="margin-bottom:10px">Сервис цифровых услуг «ИГРОМИР» © 2026</p>
-<div>
-<a onclick="openOffer()">Публичная оферта и правила</a> | 
-<a href="https://t.me" target="_blank">Контакты поддержки</a>
-</div>
-</footer>
-</div>
-
-<div id="modal" class="modal">
-<div class="modal-content">
-<div style="font-weight:bold;color:#fb923c;font-size:20px">ОПЛАТА ЗАКАЗА</div>
-<div class="instructions">
-1. Нажмите кнопку ниже для перехода на страницу оплаты.<br>
-2. Переведите точную сумму: <strong id="m-amt" style="color:#fff">0 ₽</strong><br>
-3. Укажите в комментарии или отправьте в поддержку номер заказа.
-</div>
-<a href="https://tb.ru" target="_blank" style="text-decoration:none">
-<button class="close-btn" style="background:#16a34a">🟢 Оплатить заказ</button>
-</a>
-<p style="font-size:13px;margin-top:15px">Номер вашего заказа:</p>
-<div id="m-ord" class="order-badge">#0000</div>
-<a href="https://t.me" target="_blank" style="text-decoration:none">
-<button class="close-btn" style="background:#24a1de">✈ Подтвердить оплату в Telegram</button>
-</a>
-<button class="close-btn" onclick="document.getElementById('modal').style.display='none'" style="background:#1e2633">Закрыть</button>
-</div>
-</div>
-
-<div id="offer-modal" class="modal">
-<div class="modal-content" style="text-align:left">
-<h3 style="color:#fff;margin-bottom:10px;text-align:center">Публичная оферта и Правила</h3>
-<div class="instructions" style="max-height:300px;overflow-y:auto">
-<strong>1. Общие положения</strong><br>
-Настоящее соглашение регулирует порядок оказания цифровых услуг по пополнению баланса игровых аккаунтов Steam на сайте ИГРОМИР.<br><br>
-<strong>2. Порядок оказания услуг</strong><br>
-Покупатель обязуется указать корректный логин аккаунта Steam (не никнейм). После оплаты средства зачисляются на баланс в течение 5–15 минут.<br><br>
-<strong>3. Ответственность и возврат</strong><br>
-Если Покупатель указал неверный логин существующего аккаунта и перевод был выполнен, услуга считается оказанной и возврату не подлежит. Если платеж не прошел по вине сервиса, производится полный возврат средств по обращению в поддержку (<a href="https://t.me" target="_blank" style="color:#38bdf8">@quenti2508</a>).<br><br>
-<strong>4. Запрещённые действия</strong><br>
-Сервис не занимается продажей запрещённых товаров, финансовых пирамид и нарушением законодательства РФ.
-</div>
-<button class="close-btn" onclick="document.getElementById('offer-modal').style.display='none'">Понятно, закрыть</button>
-</div>
-</div>
-
-<script>
-const l=document.getElementById('login'),g=document.getElementById('amt-get'),p=document.getElementById('amt-pay'),sl=document.getElementById('sum-log'),st=document.getElementById('sum-tot'),sr=document.getElementById('sum-reg'),lg=document.getElementById('lbl-get');
-let reg='Россия';
-const C={'Россия':{m:1.18,s:'₽'},'Казахстан':{m:0.26,s:'₸'},'Украина':{m:2.85,s:'₴'}};
-function calc(){
-const v=parseFloat(g.value)||0;
-let t=Math.ceil(v*C[reg].m);
-if(v>0&&t<50)t=50;
-p.value=t;st.textContent=t+' ₽';
-}
-function openOffer(){document.getElementById('offer-modal').style.display='flex'}
-l.oninput=e=>{sl.textContent=e.target.value.trim()||'Не указан';sl.classList.toggle('warning',!e.target.value.trim())};
-g.oninput=calc;
-document.querySelectorAll('.btn-region').forEach(b=>b.onclick=e=>{
-document.querySelector('.btn-region.active').classList.remove('active');
-e.target.classList.add('active');reg=e.target.dataset.reg;
-sr.textContent=reg;lg.textContent='Сумма зачисления ('+C[reg].s+')';calc();
-});
-document.getElementById('pay-btn').onclick=async()=>{
-if(!l.value.trim())return alert('Введите логин Steam!');
-if((parseFloat(g.value)||0)<10)return alert('Минимальная сумма зачисления — 10!');
-const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login:l.value.trim(),region:reg,amount:p.value})});
-const d=await r.json();
-if(d.success){document.getElementById('m-amt').textContent=p.value+' ₽';document.getElementById('m-ord').textContent='#'+d.orderNumber;document.getElementById('modal').style.display='flex'}
-};
-calc();
-</script>
+        <section class="extra-section">
+            <h3 class="section-title">Последние отзывы</h3>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-user"><div class="review-avatar" style="background:#3b82f6">A</div>Alex_Gamer</div>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                    <p class="review-text">Пришло за 3 минуты на ру аккаунт! Комиссия норм, буду брать еще.</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-user"><div class="review-avatar" style="background:#10b981">K</div>Kirill007</div>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                    <p class="review-text">Пополнял КЗ тенге, все четко пересчитало. Реально как на геймерсхабе, только быстрее.</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-user"><div class="review-avatar" style="background:#f59e0b">Д</div>Дмитрий</div>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                    <p class="review-text">Удобный калькулятор в обе стороны. Отличный курс для Украины.</p>
+                </div>
+            </div>
+        </section>
+        <section class="extra-section">
+            <h3 class="section-title">Часто задаваемые вопросы</h3>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">Что нужно вводить: логин или никнейм?</div>
+                    <div class="faq-answer">Нужно вводить именно <strong>ЛОГИН</strong>, под которым вы заходите в Steam. Никнейм вводить нельзя.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Как быстро придут деньги?</div>
+                    <div class="faq-answer">После подтверждения оплаты через ЮKassa средства зачисляются на баланс Steam в течение 1–15 минут.</div>
+                </div>
+            </div>
+        </section>
+        <div class="support-banner">
+            <div class="support-text">
+                <h4>Возникли вопросы или не пришли деньги?</h4>
+                <p>Наша техническая поддержка работает 24/7. Отправьте чек сюда.</p>
+            </div>
+            <a href="https://t.me" target="_blank" class="btn-support">✈ Написать в @quenti2508</a>
+        </div>
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-title">Реквизиты самозанятого</div>
+                    <p>Плательщик НПД: <strong>Шестаков Александр Владимирович</strong><br>ИНН: 311403796085</p>
+                </div>
+                <div>
+                    <div class="footer-title">Контакты и адрес</div>
+                    <p>Телефон: +7 (999) 000-00-00<br>Email: Quenti3215@gmail.com<br>Адрес: 308000, г. Белгород<br>Telegram: @quenti2508</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-title">Правовая информация</div>
+                    <a href="/oferta.html">Публичная оферта (Пользовательское соглашение)</a>
+                    <a href="/privacy.html">Политика конфиденциальности</a>
+                    <p style="margin-top:8px;font-size:12px;color:#64748b;">© 2026 ИГРОМИР</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div id="sbp-modal" class="modal">
+        <div class="modal-content">
+            <div style="font-weight: bold; color: #fb923c; font-size: 22px; margin-bottom: 5px;">ЗАКАЗ СФОРМИРОВАН</div>
+            <p style="color: #94a3b8; font-size: 13px;">Инструкция по ручной оплате</p>
+            <div class="instructions">
+                1. Нажмите на кнопку ниже для безопасной оплаты.<br>
+                2. Переведите точную сумму заказа: <strong id="modal-amount">0 ₽</strong><br><br>
+                <strong>Внимание:</strong> Перевод осуществляется на официальную страницу защиты Т-Банка. Ваш номер телефона скрыт.
+            </div>
+            <a href="https://tb.ru" target="_blank" style="text-decoration:none;">
+                <button class="close-btn" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); margin-bottom: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);">
+                    🟢 Перейти к безопасной оплате
+                </button>
+            </a>
+            <p style="font-size: 13px; color: #fff; font-weight: 500;">Ваш номер заказа:</p>
+            <div id="modal-order" class="order-badge">#0000</div>
+            <p style="font-size: 12px; color: #f43f5e; line-height: 1.4; margin-bottom: 15px;">После отправки денег пришлите чек и номер заказа в поддержку.</p>
+            <a href="https://t.me" target="_blank" style="text-decoration:none;"><button class="close-btn" style="background:#24a1de; margin-bottom:8px;">✈ Отправить чек в Telegram</button></a>
+            <button class="close-btn" onclick="document.getElementById('sbp-modal').style.display='none'" style="background:#1e2633; margin-top:0;">Закрыть окно</button>
+        </div>
+    </div>
+    <script>
+        const loginInput = document.getElementById('steam-login');
+        const amountGet = document.getElementById('amount-get');
+        const amountPay = document.getElementById('amount-pay');
+        const summaryLogin = document.getElementById('summary-login');
+        const summaryTotal = document.getElementById('summary-total');
+        const summaryRegion = document.getElementById('summary-region');
+        const summaryRate = document.getElementById('summary-rate');
+        const labelGet = document.getElementById('label-get');
+        const suffixGet = document.getElementById('suffix-get');
+        const payBtn = document.getElementById('pay-btn');
+        let selectedRegion = 'Россия';
+        const CONFIG = {
+            'Россия': { multiplier: 1.18, sign: '₽', label: 'Получите в рублях', rateText: '100 ₽ зачисления = 118 ₽ к оплате' },
+            'Казахстан': { multiplier: 0.26, sign: '₸', label: 'Получите в тенге', rateText: '100 ₸ зачисления = 26 ₽ к оплате' },
+            'Украина': { multiplier: 2.85, sign: '₴', label: 'Получите в гривнах', rateText: '10 ₴ зачисления = 28.5 ₽ к оплате' }
+        };
+        function calculate() {
+            const value = parseFloat(amountGet.value) || 0;
+            const current = CONFIG[selectedRegion];
+            let totalPay = Math.ceil(value * current.multiplier);
+            if (value > 0 && totalPay < 50) totalPay = 50;
+            amountPay.value = totalPay;
+            summaryTotal.textContent = `${totalPay} ₽`;
+            summaryRate.textContent = current.rateText;
+        }
+        loginInput.addEventListener('input', (e) => {
+            if(e.target.value.trim() === "") {
+                summaryLogin.textContent = "Введите логин";
+                summaryLogin.classList.add('warning');
+            } else {
+                summaryLogin.textContent = e.target.value;
+                summaryLogin.classList.remove('warning');
+            }
+        });
+        amountGet.addEventListener('input', calculate);
+        document.querySelectorAll('.btn-region').forEach(button => {
+            button.addEventListener('click', (e) => {
+                document.querySelector('.btn-region.active').classList.remove('active');
+                const targetBtn = e.target.closest('.btn-region');
+                targetBtn.classList.add('active');
+                selectedRegion = targetBtn.getAttribute('data-region');
+                summaryRegion.textContent = selectedRegion;
+                labelGet.textContent = CONFIG[selectedRegion].label;
+                suffixGet.textContent = CONFIG[selectedRegion].sign;
+                calculate();
+            });
+        });
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                question.parentElement.classList.toggle('active');
+            });
+        });
+        payBtn.addEventListener('click', async () => {
+            const login = loginInput.value.trim();
+            const payValue = parseFloat(amountPay.value) || 0;
+            if(!login) { alert('Пожалуйста, введите логин Steam!'); return; }
+            if(parseFloat(amountGet.value) < 10) { alert('Минимальная сумма зачисления слишком мала!'); return; }
+            const response = await fetch('/api/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, region: selectedRegion, amount: payValue })
+            });
+            const data = await response.json();
+            if(data.success) {
+                document.getElementById('modal-amount').textContent = `${payValue} ₽`;
+                document.getElementById('modal-order').textContent = `#${data.orderNumber}`;
+                document.getElementById('sbp-modal').style.display = 'flex';
+            }
+        });
+        calculate();
+    </script>
 </body>
 </html>
